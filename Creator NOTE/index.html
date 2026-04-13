@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0F172A">
+    <title>Creator Studio · AI Content Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div class="splash-screen" id="splash">
+    <div class="splash-container">
+        <div class="splash-icon">✨</div>
+        <h1 class="splash-title">Creator Studio</h1>
+        <p class="splash-subtitle">Your AI-Powered Content Hub</p>
+        <div class="splash-progress">
+            <div class="splash-progress-bar" id="splashBar"></div>
+        </div>
+        <p class="splash-percent" id="splashPercent">0%</p>
+    </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app" id="app" style="display: none;">
+
+    <!-- HOME SCREEN -->
+    <div class="screen home-screen active" id="homeScreen">
+        <!-- Header -->
+        <div class="home-header">
+            <div class="header-top">
+                <div>
+                    <h1 class="welcome-title">Welcome back, <span class="gradient-text">Creator</span> 👋</h1>
+                    <p class="welcome-subtitle">Ready to create amazing content?</p>
+                </div>
+                <button class="icon-btn" onclick="openApiModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.06.06A10 10 0 0 0 12 17.66a10 10 0 0 0 6.28-2.06l.06-.06z"/>
+                        <path d="M12 22v-4"/>
+                        <path d="M12 6V2"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- AI Quick Action Card -->
+            <div class="ai-card" onclick="openAI()">
+                <div class="ai-card-content">
+                    <div class="ai-icon">🤖</div>
+                    <div class="ai-text">
+                        <h3>AI Content Assistant</h3>
+                        <p>Get ideas, write scripts, optimize your content</p>
+                    </div>
+                    <div class="ai-arrow">→</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon purple">📝</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="totalNotes">0</span>
+                    <span class="stat-label">Total Notes</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon blue">📁</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="totalFolders">0</span>
+                    <span class="stat-label">Folders</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">✅</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="completedTasks">0</span>
+                    <span class="stat-label">Tasks Done</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">🔥</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="pendingTasks">0</span>
+                    <span class="stat-label">Pending</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="action-btn" onclick="switchTab('todo')">
+                <span>✅</span>
+                <span>Tasks</span>
+            </button>
+            <button class="action-btn" onclick="openAddFolder()">
+                <span>📁</span>
+                <span>New Folder</span>
+            </button>
+            <button class="action-btn" onclick="openAITodo()">
+                <span>✨</span>
+                <span>AI Task</span>
+            </button>
+        </div>
+
+        <!-- Platforms Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">🎯 Your Platforms</h2>
+                <span class="section-badge">6 active</span>
+            </div>
+            <div class="platforms-grid" id="platformsGrid"></div>
+        </div>
+
+        <!-- Recent Tasks -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">📋 Recent Tasks</h2>
+                <button class="see-all" onclick="switchTab('todo')">See All →</button>
+            </div>
+            <div class="tasks-preview" id="tasksPreview"></div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-item active" data-screen="home" onclick="goHome()">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Home</span>
+            </button>
+            <button class="nav-item" data-screen="todo" onclick="switchTab('todo')">
+                <span class="nav-icon">✅</span>
+                <span class="nav-label">Tasks</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- PLATFORM SCREEN -->
+    <div class="screen" id="platformScreen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="goHome()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </button>
+            <div class="platform-title">
+                <span class="platform-icon" id="platformIcon"></span>
+                <div>
+                    <h2 id="platformName"></h2>
+                    <p id="platformDesc"></p>
+                </div>
+            </div>
+            <button class="ai-icon-btn" onclick="openAI()">✨</button>
+        </div>
+        <div class="scroll-content">
+            <div class="folders-grid" id="foldersGrid"></div>
+        </div>
+        <button class="fab" onclick="openAddFolder()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- FOLDER SCREEN -->
+    <div class="screen" id="folderScreen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="goPlatform()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </button>
+            <div class="folder-title">
+                <span class="folder-icon" id="folderIcon"></span>
+                <div>
+                    <h2 id="folderName"></h2>
+                    <p id="folderStats"></p>
+                </div>
+            </div>
+            <button class="ai-icon-btn" onclick="openAI()">✨</button>
+        </div>
+        <div class="scroll-content">
+            <div class="notes-list" id="notesList"></div>
+        </div>
+        <button class="fab" onclick="openNoteEditor(null)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- NOTE EDITOR -->
+    <div class="screen" id="noteEditor">
+        <div class="editor-header">
+            <button class="back-btn" onclick="goFolder()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </button>
+            <input class="editor-title" id="noteTitle" placeholder="Note title...">
+            <button class="save-btn" onclick="saveNote()">Save</button>
+        </div>
+        <div class="editor-scroll-content">
+            <textarea class="note-textarea" id="noteBody" placeholder="Write your ideas, scripts, or captions here..."></textarea>
+            <div class="ai-assist">
+                <span class="assist-icon">✨</span>
+                <input class="assist-input" id="aiPrompt" placeholder="Ask AI to expand, rewrite, or improve...">
+                <button class="assist-btn" onclick="aiAssistNote()">Generate</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TASKS SCREEN -->
+    <div class="screen" id="tasksScreen">
+        <div class="tasks-header">
+            <div>
+                <h1 class="tasks-title">Task Manager</h1>
+                <p class="tasks-subtitle">Stay organized, create better</p>
+            </div>
+            <button class="ai-icon-btn" onclick="openAI('todo')">✨</button>
+        </div>
+        <div class="scroll-content">
+            <!-- Progress Card -->
+            <div class="progress-card">
+                <div class="progress-header">
+                    <span>📊 Weekly Progress</span>
+                    <span class="progress-percent" id="taskPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="taskFill"></div>
+                </div>
+                <div class="progress-stats">
+                    <div class="progress-stat">
+                        <span class="stat-number" id="taskDone">0</span>
+                        <span class="stat-label">Completed</span>
+                    </div>
+                    <div class="progress-stat">
+                        <span class="stat-number" id="taskPending">0</span>
+                        <span class="stat-label">Pending</span>
+                    </div>
+                    <div class="progress-stat">
+                        <span class="stat-number" id="taskTotal">0</span>
+                        <span class="stat-label">Total</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="task-filters" id="taskFilters"></div>
+
+            <!-- Tasks List -->
+            <div class="tasks-list" id="tasksList"></div>
+        </div>
+        <button class="fab task-fab" onclick="openAddTodo()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"/>
+            </svg>
+        </button>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-item" data-screen="home" onclick="goHome()">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Home</span>
+            </button>
+            <button class="nav-item active" data-screen="todo" onclick="switchTab('todo')">
+                <span class="nav-icon">✅</span>
+                <span class="nav-label">Tasks</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal" id="aiModal">
+    <div class="modal-overlay" onclick="closeAIModal()"></div>
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3>🤖 AI Assistant</h3>
+            <button class="modal-close" onclick="closeAIModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="ai-chips" id="aiChips"></div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai">👋 Hi! I'm your AI content coach. Ask me anything about content creation, scripts, or ideas!</div>
+            </div>
+            <div class="chat-input-container">
+                <textarea class="chat-input" id="chatInput" placeholder="Ask me anything..." rows="2"></textarea>
+                <button class="chat-send" onclick="sendChatMessage()">→</button>
+            </div>
+            <div class="api-status">
+                <span id="apiStatus">Not configured</span>
+                <button class="api-config" onclick="openApiModal()">Configure API</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="apiModal">
+    <div class="modal-overlay" onclick="closeApiModal()"></div>
+    <div class="modal-container small">
+        <div class="modal-header">
+            <h3>🔑 API Configuration</h3>
+            <button class="modal-close" onclick="closeApiModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <p class="api-info">Enter your Anthropic API key to use AI features</p>
+            <input type="password" class="api-input" id="apiKeyInput" placeholder="sk-ant-api03-...">
+            <button class="btn-primary" onclick="saveApiKey()">Save Key</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="folderModal">
+    <div class="modal-overlay" onclick="closeFolderModal()"></div>
+    <div class="modal-container bottom">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+            <h3>📁 Create New Folder</h3>
+        </div>
+        <div class="modal-body">
+            <input type="text" class="modal-input" id="folderNameInput" placeholder="Folder name">
+            <label class="input-label">Choose an icon</label>
+            <div class="emoji-grid" id="emojiGrid"></div>
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="closeFolderModal()">Cancel</button>
+                <button class="btn-primary" onclick="createFolder()">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="taskModal">
+    <div class="modal-overlay" onclick="closeTaskModal()"></div>
+    <div class="modal-container bottom">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+            <h3 id="taskModalTitle">✅ New Task</h3>
+        </div>
+        <div class="modal-body">
+            <input type="text" class="modal-input" id="taskText" placeholder="What needs to be done?">
+            <select class="modal-select" id="taskPlatform">
+                <option value="General">General</option>
+                <option value="YouTube">YouTube</option>
+                <option value="Instagram">Instagram</option>
+                <option value="TikTok">TikTok</option>
+                <option value="Twitter">Twitter</option>
+                <option value="LinkedIn">LinkedIn</option>
+            </select>
+            <select class="modal-select" id="taskPriority">
+                <option value="high">🔴 High Priority</option>
+                <option value="medium" selected>🟡 Medium Priority</option>
+                <option value="low">🟢 Low Priority</option>
+            </select>
+            <input type="date" class="modal-input" id="taskDue">
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="closeTaskModal()">Cancel</button>
+                <button class="btn-primary" onclick="saveTask()">Save Task</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
